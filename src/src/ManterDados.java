@@ -6,7 +6,7 @@ public interface ManterDados {
     void incluirNoFinal(Estudante novoDado);
     void incluirEm(Estudante novoDado, int posicaoDeInclusao);
     void excluir(int posicaoDeExclusao);
-    Estudante valorDe(int indiceDeAcesso);
+    Estudante valorDe(int indiceDeAcesso) throws Exception;
     void alterar(int posicaoDeAlteracao, Estudante novoDado);
     void trocar(int origem, int destino);
     void ordenar();

@@ -13,74 +13,76 @@ public class Manutencao {
     static Scanner leitor = new Scanner(in);
     static boolean continuarPrograma = true;
     static int onde; // índice resultante da pesquisa binária
+    //-------------------------------------------------------
+    static ManterEstudantes manEstud = new ManterEstudantes();
 
     public static void main(String[] args) throws Exception {
-        estud = new Estudante[3];  // 50 - tamanho físico
+        //estud = new Estudante[3];  // 50 - tamanho físico
         for (int ind=0; ind < 3; ind++)
             estud[ind] = new Estudante(); // criar objetos Estudante vazios no vetor
         quantosEstudantes = 0; // tamanho lógico (vetor vazio)
-        preencherVetorPorArquivo();
+        manEstud.leituraDosDados("dadosEstudantes.txt"); //TALVEZ DEPOIS VER O ARQUIVO COM O SCANNER
         if (continuarPrograma) {
             seletorDeOpcoes();
-            salvarVetorNoArquivo();
+            manEstud.gravarDados("dadosEstudantes.txt");//TALVEZ DEPOIS VER O ARQUIVO COM O SCANNER
         }
         out.println("\nPrograma encerrado.");
     }
 
-    public static void preencherVetorPorArquivo() {
-        try {
-            arquivoDeEntrada = new BufferedReader(
-                    new FileReader("c:\\temp\\dadosEstudantes.txt")
-            );
-            String linhaDoArquivo = "";
-            try
-            {
-                boolean parar = false;
-                while (! parar)
-                {
-                    Estudante novoEstudante = new Estudante();
-                    try
-                    {
-                        if (novoEstudante.leuLinhaDoArquivo(arquivoDeEntrada) ) {
-                            estud[quantosEstudantes] = novoEstudante;
-                            quantosEstudantes++;
-                        }
-                        else
-                            parar = true;
-                    }
-                    catch (Exception erroDeLeitura)
-                    {
-                        out.println(erroDeLeitura.getMessage());
-                        parar = true;
-                    }
-                }
-                arquivoDeEntrada.close();
-            }
-            catch (IOException erroDeIO)
-            {
-                out.println(erroDeIO.getMessage());
-                continuarPrograma = false;
-            }
-        }
-        catch (FileNotFoundException erro) {
-            out.println(erro.getMessage());
-            continuarPrograma = false;
-        }
-    }
+//    public static void preencherVetorPorArquivo() {
+//        try {
+//            arquivoDeEntrada = new BufferedReader(
+//                    new FileReader("c:\\temp\\dadosEstudantes.txt")
+//            );
+//            String linhaDoArquivo = "";
+//            try
+//            {
+//                boolean parar = false;
+//                while (! parar)
+//                {
+//                    Estudante novoEstudante = new Estudante();
+//                    try
+//                    {
+//                        if (novoEstudante.leuLinhaDoArquivo(arquivoDeEntrada) ) {
+//                            estud[quantosEstudantes] = novoEstudante;
+//                            quantosEstudantes++;
+//                        }
+//                        else
+//                            parar = true;
+//                    }
+//                    catch (Exception erroDeLeitura)
+//                    {
+//                        out.println(erroDeLeitura.getMessage());
+//                        parar = true;
+//                    }
+//                }
+//                arquivoDeEntrada.close();
+//            }
+//            catch (IOException erroDeIO)
+//            {
+//                out.println(erroDeIO.getMessage());
+//                continuarPrograma = false;
+//            }
+//        }
+//        catch (FileNotFoundException erro) {
+//            out.println(erro.getMessage());
+//            continuarPrograma = false;
+//        }
+//    }
 
-    public static void salvarVetorNoArquivo() throws IOException {
-        arquivoDeSaida = new BufferedWriter(
-                new FileWriter("c:\\temp\\dadosEstudantes.txt"));
-
-        if (ordemAtual != Ordens.porRa)
-            ordenarPorRa();
-
-        // percorro o vetor de estudantes para gravar, no arquivo de saída,
-        // os objetos da classe Estudante armazenados no vetor estud
-        for (int indice=0; indice < quantosEstudantes; indice++)
-            arquivoDeSaida.write(estud[indice].formatoDeArquivo());
-        arquivoDeSaida.close();
-    }
+//    public static void salvarVetorNoArquivo() throws IOException {
+//        arquivoDeSaida = new BufferedWriter(
+//                new FileWriter("c:\\temp\\dadosEstudantes.txt"));
+//
+//        if (ordemAtual != Ordens.porRa)
+//            ordenarPorRa();
+//
+//        // percorro o vetor de estudantes para gravar, no arquivo de saída,
+//        // os objetos da classe Estudante armazenados no vetor estud
+//        for (int indice=0; indice < quantosEstudantes; indice++)
+//            arquivoDeSaida.write(estud[indice].formatoDeArquivo());
+//        arquivoDeSaida.close();
+//    }
 
     public static void seletorDeOpcoes() throws Exception {
         int opcao = 0;
@@ -117,26 +119,27 @@ public class Manutencao {
     // compareTo()   > 0  dado this > outro dado
     // esse método guarda no atributo "onde" o índice de inclusão ou
     // o índice em que o estudante procurado foi encontrado
-    public static boolean existeEstudante(Estudante estProcurado) {
-        int inicio = 0;
-        int fim = quantosEstudantes - 1;
-        boolean achou = false;
-        while (! achou && inicio <= fim) {
-            onde = (inicio + fim) / 2;
-            String raDoMeioDoTrechoDoVetor = estud[onde].getRa();
-            String raDoProcurado = estProcurado.getRa();
-            if (raDoMeioDoTrechoDoVetor.compareTo(raDoProcurado) == 0)
-                achou = true;
-            else
-            if (raDoProcurado.compareTo(raDoMeioDoTrechoDoVetor) < 0)
-                fim = onde - 1;
-            else
-                inicio = onde + 1;
-        }
-        if (!achou)
-            onde = inicio;   // posição de inclusao do RA em ordem crescente
-        return achou;
-    }
+
+//    public static boolean existeEstudante(Estudante estProcurado) {
+//        int inicio = 0;
+//        int fim = quantosEstudantes - 1;
+//        boolean achou = false;
+//        while (! achou && inicio <= fim) {
+//            onde = (inicio + fim) / 2;
+//            String raDoMeioDoTrechoDoVetor = estud[onde].getRa();
+//            String raDoProcurado = estProcurado.getRa();
+//            if (raDoMeioDoTrechoDoVetor.compareTo(raDoProcurado) == 0)
+//                achou = true;
+//            else
+//            if (raDoProcurado.compareTo(raDoMeioDoTrechoDoVetor) < 0)
+//                fim = onde - 1;
+//            else
+//                inicio = onde + 1;
+//        }
+//        if (!achou)
+//            onde = inicio;   // posição de inclusao do RA em ordem crescente
+//        return achou;
+//    }
 
     public static void incluirEstudante() throws Exception {
         if (ordemAtual != Ordens.porRa)
@@ -150,7 +153,7 @@ public class Manutencao {
         out.print("Nome  : ");
         String nome = leitor.nextLine();
         Estudante umEstudante = new Estudante(curso, ra, nome);
-        if (existeEstudante(umEstudante))  // ajusta a variável onde
+        if (manEstud.existe(umEstudante))  // ajusta a variável onde
             JOptionPane.showMessageDialog(null,"Estudante repetido!");
         else
         {
@@ -164,6 +167,7 @@ public class Manutencao {
             novoVetor[indice] = estud[indice];
         estud = novoVetor;
     }
+
     private static void incluirEmOrdem(Estudante novo) {
         if (quantosEstudantes >= estud.length)
             expandirVetor();
@@ -181,19 +185,19 @@ public class Manutencao {
         out.print("RA    : ");
         String ra = leitor.nextLine();
         Estudante umEstudante = new Estudante(" ", ra, " ");
-        if (!existeEstudante(umEstudante))  // ajusta a variável onde
+        if (!manEstud.existe(umEstudante))  // ajusta a variável onde
             JOptionPane.showMessageDialog(null,"Estudante não encontrado!");
         else  // achou o estudante procurado, no índice "onde" do vetor
         {
-            excluir(onde);  // última posição usada
+            manEstud.excluir(onde);  // última posição usada
         }
     }
 
-    private static void excluir(int indiceDeExclusao) {
-        quantosEstudantes--;
-        for (int indice=indiceDeExclusao; indice < quantosEstudantes; indice++)
-            estud[indice] = estud[indice+1];
-    }
+//    private static void excluir(int indiceDeExclusao) {
+//        quantosEstudantes--;
+//        for (int indice=indiceDeExclusao; indice < quantosEstudantes; indice++)
+//            estud[indice] = estud[indice+1];
+//    }
 
     public static void listarEstudantes() {
         out.println("\n\nListagem de Estudantes\n");
@@ -242,32 +246,32 @@ public class Manutencao {
     //      valide a nota entre 0 e 10.0, peça de novo se a nota não
     //      estiver nesse intervalo
 
-    private static void trocar(int indMaior, int indMenor) {
-        Estudante auxiliar = estud[indMaior];
-        estud[indMaior] = estud[indMenor];
-        estud[indMenor] = auxiliar;
-    }
+//    private static void trocar(int indMaior, int indMenor) {
+//        Estudante auxiliar = estud[indMaior];
+//        estud[indMaior] = estud[indMenor];
+//        estud[indMenor] = auxiliar;
+//    }
     private static void ordenarPorCurso() {
         for (int lento=0; lento < quantosEstudantes; lento++)
             for (int rapido=lento+1; rapido < quantosEstudantes; rapido++)
                 if (estud[lento].getCurso().compareTo(estud[rapido].getCurso()) > 0)
-                    trocar(lento, rapido);
+                    manEstud.trocar(lento, rapido);
         ordemAtual = Ordens.porCurso;
     }
 
-    private static void ordenarPorRa() {
-        for (int lento=0; lento < quantosEstudantes; lento++)
-            for (int rapido=lento+1; rapido < quantosEstudantes; rapido++)
-                if (estud[lento].getRa().compareTo(estud[rapido].getRa()) > 0)
-                    trocar(lento, rapido);
-        ordemAtual = Ordens.porRa;
-    }
+//    private static void ordenarPorRa() {
+//        for (int lento=0; lento < quantosEstudantes; lento++)
+//            for (int rapido=lento+1; rapido < quantosEstudantes; rapido++)
+//                if (estud[lento].getRa().compareTo(estud[rapido].getRa()) > 0)
+//                    manEstud.trocar(lento, rapido);
+//        ordemAtual = Ordens.porRa;
+//    }
 
     private static void ordenarPorNome() {
         for (int lento=0; lento < quantosEstudantes; lento++)
             for (int rapido=lento+1; rapido < quantosEstudantes; rapido++)
                 if (estud[lento].getNome().compareTo(estud[rapido].getNome()) > 0)
-                    trocar(lento, rapido);
+                    manEstud.trocar(lento, rapido);
         ordemAtual = Ordens.porNome;
     }
 
@@ -276,7 +280,7 @@ public class Manutencao {
             double mediaAtual = estud[lento].mediaDasNotas();
             for (int rapido=lento+1; rapido < quantosEstudantes; rapido++)
                 if (mediaAtual > estud[rapido].mediaDasNotas())
-                    trocar(lento, rapido);
+                    manEstud.trocar(lento, rapido);
             ordemAtual = Ordens.porMedia;
         }
     }
@@ -286,7 +290,7 @@ public class Manutencao {
         String raEstudante = leitor.nextLine();
         try {
             Estudante estProc = new Estudante("00", raEstudante, "A");
-            if (!existeEstudante(estProc))
+            if (!manEstud.existe(estProc))
                 out.println("Não há um(a) estudante com esse RA!");
             else {  // se RA foi encontrado, variável onde contém seu índice
                 out.print("Quantidade de notas a serem digitadas: ");

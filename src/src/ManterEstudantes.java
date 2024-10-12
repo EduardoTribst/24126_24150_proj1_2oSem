@@ -5,6 +5,7 @@ public class ManterEstudantes implements ManterDados {
             posicaoAtual;
     Estudante[] dados;
     Situacao situacao;
+    int onde;
     public void leituraDosDados(String nomeArquivo) throws IOException {
         try {
             posicaoAtual = 0;
@@ -52,11 +53,24 @@ public class ManterEstudantes implements ManterDados {
         arquivoDeSaida.close();
     }
     public Boolean existe(Estudante dadoProcurado) {
-        for (int i = 0; i<qtosDados; i++){
-            if (dados[i] == dadoProcurado)
-                return true;
+        int inicio = 0;
+        int fim = qtosDados - 1;
+        boolean achou = false;
+        while (! achou && inicio <= fim) {
+            onde = (inicio + fim) / 2;
+            String raDoMeioDoTrechoDoVetor = dados[onde].getRa();
+            String raDoProcurado = dadoProcurado.getRa();
+            if (raDoMeioDoTrechoDoVetor.compareTo(raDoProcurado) == 0)
+                achou = true;
+            else
+            if (raDoProcurado.compareTo(raDoMeioDoTrechoDoVetor) < 0)
+                fim = onde - 1;
+            else
+                inicio = onde + 1;
         }
-        return false;
+        if (!achou)
+            onde = inicio;   // posição de inclusao do RA em ordem crescente
+        return achou;
     }
 
     public void incluirNoFinal(Estudante novoDado) {
@@ -76,14 +90,19 @@ public class ManterEstudantes implements ManterDados {
         }
     }
 
-    public void excluir(int posicaoDeExclusao) {
+    public void excluir(int posicaoDeExclusao)  {
         qtosDados --;
         for(int i = posicaoDeExclusao; i<qtosDados; i++){
             dados[i] = dados[i+1]; //DEVE ESTOURAR O LIMITE DE ESTUDANTES
         }
     }
 
-    public Estudante valorDe(int indiceDeAcesso) { ... }
+    public Estudante valorDe(int indiceDeAcesso) throws Exception {
+        if (indiceDeAcesso >= 0 && indiceDeAcesso < qtosDados)
+            return dados[indiceDeAcesso];
+        else
+            throw new Exception("Indice fora dos limites");
+    }
 
     public void alterar(int posicaoDeAlteracao, Estudante novoDado) {
         dados[posicaoDeAlteracao] = novoDado;
@@ -95,7 +114,12 @@ public class ManterEstudantes implements ManterDados {
         dados[destino] = auxiliar;
     }
 
-    public void ordenar() { ... }
+    public void ordenar() {
+        for (int lento=0; lento < qtosDados; lento++)
+            for (int rapido=lento+1; rapido < qtosDados; rapido++)
+                if (dados[lento].getRa().compareTo(dados[rapido].getRa()) > 0)
+                    trocar(lento, rapido);
+    }
 
     public Boolean estaVazio() {
         if (qtosDados == 0){
