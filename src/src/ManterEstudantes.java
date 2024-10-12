@@ -174,4 +174,24 @@ public class ManterEstudantes implements ManterDados {
     public void setSituacao(Situacao novaSituacao) {
         situacao = novaSituacao;
     }
+
+    public void expandirVetor() {
+        Estudante[] novoVetor = new Estudante[dados.length * 2];
+        for (int indice=0; indice<qtosDados; indice++)
+            novoVetor[indice] = dados[indice];
+        dados = novoVetor;
+    }
+
+    public void incluirEmOrdem(Estudante novo) {
+        if (qtosDados >= dados.length)
+            expandirVetor();
+        // desloco para a direita os estudantes com RA > RA do novo
+        for (int indice = qtosDados; indice > onde; indice--)
+            dados[indice] = dados[indice-1];
+        dados[onde] = novo;
+        qtosDados++;  // temos mais um estudante no vetor
+    }
+
 }
+
+
