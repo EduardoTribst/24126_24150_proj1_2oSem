@@ -23,14 +23,19 @@ public class Estudante {
     public boolean leuLinhaDoArquivo(BufferedReader arq) throws Exception {
         if (arq != null)    // arquivo de entrada está aberto
         {
+            System.out.println("O arquivo não é null");
             String linhaDoArquivo = arq.readLine();
+            System.out.println("Conseguiu dar readLine");
             if (linhaDoArquivo != null)  // conseguiu ler linha do arquivo
-            {
+            {   
+                System.out.println("Linha não nula");
+                System.out.println(linhaDoArquivo);
                 String c = linhaDoArquivo.substring( 0,  2);
                 String r = linhaDoArquivo.substring( 2,  7);
                 String n = linhaDoArquivo.substring( 7, 37);
                 String sqn = linhaDoArquivo.substring(37, 39);  // string
                 int qn = Integer.parseInt(sqn); // converte sqn para int
+                System.out.println("Sem problemas com as substings");
                 setNotas(15);  // cria vetor de notas do estudante com 15 posições
 
                 // atribuímos os valores já conhecidos para os campos (atributos)
@@ -42,6 +47,7 @@ public class Estudante {
 
                 // separamos da linha do arquivo, tantas notas quanto o valor de
                 // qn e cada nota é atribuida a uma posição do vetor interno notas
+                System.out.println("Sem problemas com os setters");
                 int inicioNota = 39;  // início da primeira nota
                 for (int indNota = 0; indNota < qn; indNota++)
                 {
@@ -148,11 +154,34 @@ public class Estudante {
     public double mediaDasNotas() {
         if (quantasNotas <= 0)
             return 0.0;
-
         double soma = 0;
         for (int ind = 0; ind < quantasNotas; ind++)
             soma += notas[ind];
         return soma / quantasNotas;
+    }
+
+    public int getIndiceMaiorNota(){
+        double maiorNota = -1;
+        int indMaior=0;
+        for (int i=0; i<quantasNotas; i++){
+            if (notas[i] > maiorNota){
+                maiorNota = notas[i];
+                indMaior = i;
+            }
+        }
+        return indMaior;
+    }
+
+    public int getIndiceMenorNota(){
+        double menorNota = 11;
+        int indMenor=0;
+        for (int i=0; i<quantasNotas; i++){
+            if (notas[i] < menorNota){
+                menorNota = notas[i];
+                indMenor = i;
+            }
+        }
+        return indMenor;
     }
 
     public void incluirNota(double qualNota) throws Exception

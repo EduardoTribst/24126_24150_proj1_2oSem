@@ -2,38 +2,37 @@ import java.io.*;
 import static java.lang.System.out;
 public class ManterEstudantes implements ManterDados {
     int qtosDados,
-    posicaoAtual;
+    posicaoAtual,
+    tamanhoFisico;
     Estudante[] dados;
     Situacao situacao;
     int onde;
+
+    public void inicializaVetor(int tamanho){
+        tamanhoFisico = tamanho;
+        dados = new Estudante[tamanho];
+    }
 
     public void leituraDosDados(String nomeArquivo) throws IOException {
         try {
             posicaoAtual = 0;
             BufferedReader arquivoDeEntrada = new BufferedReader(
-                    new FileReader("c:\\temp\\dadosEstudantes.txt"));
-            String linhaDoArquivo = "";
+                    new FileReader(nomeArquivo));
             try {
                 boolean parar = false;
                 while (! parar) {
                     Estudante novoDado = new Estudante();
-
                     try {
-
-                        if (novoDado.leuLinhaDoArquivo(arquivoDeEntrada) ) {
+                        if (novoDado.leuLinhaDoArquivo(arquivoDeEntrada) ) { // erro no leuLinhaDoArquivo
                             incluirNoFinal(novoDado);
                         }
                         else
-
                             parar = true;
                     }
 
                     catch (Exception erroDeLeitura) {
-
                         out.println(erroDeLeitura.getMessage());
-
                         parar = true;
-
                     }
                 }
                 arquivoDeEntrada.close();
@@ -48,7 +47,7 @@ public class ManterEstudantes implements ManterDados {
     }
     public void gravarDados(String nomeArquivo) throws IOException {
         BufferedWriter arquivoDeSaida = new BufferedWriter(
-                new FileWriter("c:\\temp\\dadosEstudantes.txt"));
+                new FileWriter("DadosEstudantes.txt"));
         for (int indice=0; indice < qtosDados; indice++)
             arquivoDeSaida.write(dados[indice].formatoDeArquivo());
         arquivoDeSaida.close();
@@ -75,9 +74,10 @@ public class ManterEstudantes implements ManterDados {
     }
 
     public void incluirNoFinal(Estudante novoDado) {
-        if (qtosDados<dados.length)
-            dados[qtosDados++] = novoDado; //Coloca em qtosDados e depois o incrementa
-        //Se não aumentar o vetor
+        if (qtosDados>=dados.length){
+            expandirVetor(); // expande vetor caso necessário
+        }
+        dados[qtosDados++] = novoDado; //Coloca em qtosDados e depois o incrementa
     }
 
     public void incluirEm(Estudante novoDado, int posicaoDeInclusao) {
@@ -181,7 +181,8 @@ public class ManterEstudantes implements ManterDados {
     }
 
     public void expandirVetor() {
-        Estudante[] novoVetor = new Estudante[dados.length * 2];
+        Estudante[] novoVetor = new Estudante[tamanhoFisico * 2];
+        tamanhoFisico *= 2;
         for (int indice=0; indice<qtosDados; indice++)
             novoVetor[indice] = dados[indice];
         dados = novoVetor;

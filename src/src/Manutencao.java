@@ -16,16 +16,19 @@ public class Manutencao {
     //-------------------------------------------------------
     static ManterEstudantes manEstud = new ManterEstudantes();
     static String[] materias;
+    static int qtsMaterias;
 
     public static void main(String[] args) throws Exception {
-        //estud = new Estudante[3];  // 50 - tamanho físico
+        manEstud.inicializaVetor(50); // tamanho físico inicial: 50
         for (int ind=0; ind < 3; ind++)
+            //out.println("Entrou no for de preencher");
             manEstud.incluirNoFinal(new Estudante());// criar objetos Estudante vazios no vetor
         quantosEstudantes = 0; // tamanho lógico (vetor vazio)
-        manEstud.leituraDosDados("dadosEstudantes.txt"); //TALVEZ DEPOIS VER O ARQUIVO COM O SCANNER
+        manEstud.leituraDosDados("../DadosEstudantes.txt"); //TALVEZ DEPOIS VER O ARQUIVO COM O SCANNER
+        leituraDadosMaterias("../DadosMateriasTeste.txt");
         if (continuarPrograma) {
             seletorDeOpcoes();
-            manEstud.gravarDados("dadosEstudantes.txt");//TALVEZ DEPOIS VER O ARQUIVO COM O SCANNER
+            //manEstud.gravarDados("../DadosEstudantes.txt");//TALVEZ DEPOIS VER O ARQUIVO COM O SCANNER
         }
         out.println("\nPrograma encerrado.");
     }
@@ -44,6 +47,7 @@ public class Manutencao {
             out.println("6 - Ordenar por curso");
             out.println("7 - Ordenar por nome");
             out.println("8 - Ordenar por média");
+            out.println("9 - Mostrar estatísticas");
             out.print("\nSua opção: ");
             opcao = leitor.nextInt();
             leitor.nextLine();      // necessário após nextInt() para poder ler strings a seguir
@@ -56,11 +60,27 @@ public class Manutencao {
                 case 6 : ordenarPorCurso(); break;
                 case 7 : ordenarPorNome(); break;
                 case 8 : ordenarPorMedia(); break;
+                case 9: estatisticas();
             }
         }
         while (opcao != 0);
     }
 
+    public static void leituraDadosMaterias(String caminhoArq){
+        qtsMaterias = manEstud.dados[0].getQuantasNotas();
+        materias = new String[qtsMaterias]; // A quantidade de matérias é a mesma da de notas
+        try {
+            BufferedReader arq = new BufferedReader(new FileReader(caminhoArq));
+            for (int i=0; i<qtsMaterias; i++){
+                materias[i] = arq.readLine();
+            }
+            arq.close();
+        }
+        catch(Exception erro){
+            out.println("erro na leitura de materias");
+            out.println(erro.getMessage());
+        }
+    }
 
     public static void incluirEstudante() throws Exception {
         if (ordemAtual != Ordens.porRa)
@@ -195,6 +215,104 @@ public class Manutencao {
         }
     }
 
+    private static void estatisticas(){
+        int[] qtsAprovadosPorDisciplina = new int[qtsMaterias];
+        int indEstudanteMaiorMedia = 0;
+        double maiorMediaEstudante = 0; 
+        double[] mediasPorDisciplina = new double[qtsMaterias];
+        double maior = -1.0;
+        double menor = 11.0;
+
+        // percorre todos os estudantes e todas as suas notas
+        for (int i=0; i<manEstud.getQtosDados(); i++){ 
+            for (int j=0; j<qtsMaterias; j++){
+                if (manEstud.dados[i].getNotas()[j] >= 5){
+                    qtsAprovadosPorDisciplina[j]++;
+                }
+                mediasPorDisciplina[j] += manEstud.dados[i].getNotas()[j];
+            }
+            // vê se é a maior média
+            double media = manEstud.dados[i].mediaDasNotas();
+            if (media > maiorMediaEstudante){
+                maiorMediaEstudante = media;
+                indEstudanteMaiorMedia = i;
+            }
+        }
+
+        int indDisciplinaMaiorAprovacao = 0;
+        int indDisciplinaMenorAprovacao = 0;
+        int maiorNumeroAprovados = -1;
+        int maiorNumeroRetidos = -1;
+        int indDisciplinaMaiorMedia = 0;
+        int indDisciplinaMenorMedia = 0;
+        // percorre o vetor das medias das materias para pegar a maior e a menor
+        for (int i=0; i<qtsMaterias; i++){
+            mediasPorDisciplina[i] = mediasPorDisciplina[i] / manEstud.getQtosDados(); // tira a média
+            // verificar quais  são as menores e maiores médias
+            if (mediasPorDisciplina[i] < menor){
+                indDisciplinaMenorMedia = i;
+                menor = mediasPorDisciplina[i];   
+            }
+            if (mediasPorDisciplina[i] > maior){
+                indDisciplinaMaiorMedia = i;
+                maior = mediasPorDisciplina[i];   
+            }
+            // utilização do vetor qtsAprovados por disciplina
+            // isso é possível porque qtsAprovados tem length de qtsMaterias
+            if (qtsAprovadosPorDisciplina[i] > maiorNumeroAprovados){
+                maiorNumeroAprovados = qtsAprovadosPorDisciplina[i];
+                indDisciplinaMaiorAprovacao = i;
+            }
+            // A quantidade de retidos é a qtdeTotal-qtdeAprovados
+            if (manEstud.getQtosDados() - qtsAprovadosPorDisciplina[i] > maiorNumeroRetidos){
+                maiorNumeroRetidos = manEstud.getQtosDados() - qtsAprovadosPorDisciplina[i]; 
+                indDisciplinaMenorAprovacao = i;
+            }
+        }
+        // Output com as estatísticas:
+        out.println("A disciplina com maior aprovação foi "+ materias[indDisciplinaMaiorAprovacao]);
+        out.println("A disciplina com maior retenção foi "+ materias[indDisciplinaMenorAprovacao]);
+        out.println("O estudante com a meior média foi " + manEstud.dados[indEstudanteMaiorMedia].getNome());
+        out.println("A matéria de sua maior nota foi "+ materias[manEstud.dados[indEstudanteMaiorMedia].getIndiceMaiorNota()]);
+        out.println("A matéria de sua menor nota foi "+ materias[manEstud.dados[indEstudanteMaiorMedia].getIndiceMenorNota()]);
+        out.println("Médias por disciplina");
+        for (int i=0; i<qtsMaterias; i++){
+            out.print(materias[i] + " ");
+        }
+        out.println(""); // quebra a linha
+        for (int i=0; i<qtsMaterias; i++){
+            out.print(mediasPorDisciplina[i] + "   ");
+        }
+        out.println(""); // quebra a linha
+        out.println("Na matéria com a menor média, a melhor nota foi do "+ 
+        manEstud.dados[getIndiceEstudanteMenorNotaPorDisciplina(indDisciplinaMenorMedia)]);
+        out.println("Na matéria com a maior média, a pior nota foi do "+ 
+        manEstud.dados[getIndiceEstudanteMenorNotaPorDisciplina(indDisciplinaMaiorMedia)]);
+    }
+
+    private static int getIndiceEstudanteMaiorNotaPorDisciplina(int indiceDaDisciplina){
+        double maiorNota = -1;
+        int indEstudMaiorNota = -1;
+        for (int i=0; i<manEstud.qtosDados; i++){
+            if (manEstud.dados[i].getNotas()[indiceDaDisciplina] > maiorNota){
+                maiorNota = manEstud.dados[i].getNotas()[indiceDaDisciplina];
+                indEstudMaiorNota = i;
+            }
+        }
+        return indEstudMaiorNota;
+    }
+
+    private static int getIndiceEstudanteMenorNotaPorDisciplina(int indiceDaDisciplina){
+        double menorNota = -1;
+        int indEstudMenorNota = -1;
+        for (int i=0; i<manEstud.qtosDados; i++){
+            if (manEstud.dados[i].getNotas()[indiceDaDisciplina] < menorNota){
+                menorNota = manEstud.dados[i].getNotas()[indiceDaDisciplina];
+                indEstudMenorNota = i;
+            }
+        }
+        return indEstudMenorNota;
+    }
 
     private static void maisEstudantesAprovados() throws Exception{
         int qual = 0;
