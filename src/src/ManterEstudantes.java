@@ -60,7 +60,9 @@ public class ManterEstudantes implements ManterDados {
     }
 
     public void incluirNoFinal(Estudante novoDado) {
-        dados[qtosDados++] = novoDado; //Coloca em qtosDados e depois o incrementa
+        if (qtosDados<dados.length)
+            dados[qtosDados++] = novoDado; //Coloca em qtosDados e depois o incrementa
+        //Se não aumentar o vetor
     }
 
     public void incluirEm(Estudante novoDado, int posicaoDeInclusao) {
