@@ -1,7 +1,7 @@
 public interface ManterDados {
     enum Situacao {navegando, incluindo, excluindo, alterando, editando, buscando}
-    void leituraDosDados(String nomeArquivo);
-    void gravarDados(String nomeArquivo);
+    void leituraDosDados(String nomeArquivo) throws Exception;
+    void gravarDados(String nomeArquivo) throws Exception;
     Boolean existe(Estudante dadoProcurado); // pesquisa binária
     void incluirNoFinal(Estudante novoDado);
     void incluirEm(Estudante novoDado, int posicaoDeInclusao);
