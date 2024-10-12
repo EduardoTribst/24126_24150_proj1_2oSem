@@ -15,6 +15,7 @@ public class Manutencao {
     static int onde; // índice resultante da pesquisa binária
     //-------------------------------------------------------
     static ManterEstudantes manEstud = new ManterEstudantes();
+    static String[] materias;
 
     public static void main(String[] args) throws Exception {
         //estud = new Estudante[3];  // 50 - tamanho físico
@@ -192,5 +193,20 @@ public class Manutencao {
             out.println("Não foi possivel criar objeto Estudante.");
             out.println(erro.getMessage());
         }
+    }
+
+
+    private static void maisEstudantesAprovados() throws Exception{
+        int qual = 0;
+        int[] aprovados = new int[manEstud.getQtosDados()];
+        for (int i = 0; i<manEstud.getQtosDados(); i++){
+            for (int ind = 0; ind < manEstud.valorDe(i).getQuantasNotas(); ind ++){
+                if (manEstud.valorDe(i).getNotas()[ind] >= 5)
+                    aprovados[ind] ++;
+            }
+        }
+        //Ver qual o indice do maior valor do vetor aprovados
+        //Não sei e essa lógica funciona mes não posso acabar agora
+        out.println("Disciplina com mais estudantes aprovados: ");
     }
 }

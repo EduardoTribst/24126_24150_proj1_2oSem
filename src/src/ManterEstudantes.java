@@ -2,10 +2,11 @@ import java.io.*;
 import static java.lang.System.out;
 public class ManterEstudantes implements ManterDados {
     int qtosDados,
-            posicaoAtual;
+    posicaoAtual;
     Estudante[] dados;
     Situacao situacao;
     int onde;
+
     public void leituraDosDados(String nomeArquivo) throws IOException {
         try {
             posicaoAtual = 0;
@@ -173,6 +174,10 @@ public class ManterEstudantes implements ManterDados {
 
     public void setSituacao(Situacao novaSituacao) {
         situacao = novaSituacao;
+    }
+
+    public int getQtosDados(){
+        return qtosDados;
     }
 
     public void expandirVetor() {
