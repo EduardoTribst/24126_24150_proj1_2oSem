@@ -198,7 +198,7 @@ public class Estudante {
                 String.format("%2s %5s %30s %2d", curso, ra, nome, quantasNotas);
 
         for (int indNota = 0; indNota < quantasNotas; indNota++)
-            saida += String.format(" %4.1f", notas[indNota]);
+            saida += String.format(" %4.1f    ", notas[indNota]);
 
         return saida;
     }

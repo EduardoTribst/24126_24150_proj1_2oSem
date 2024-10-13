@@ -141,6 +141,11 @@ public class Manutencao {
     public static void listarSituacoes() throws Exception {
         out.println("\n\nSituação estudantil\n");
         String situacao = "";
+        out.print("                                                                 ");
+        for (int i = 0; i<materias.length; i++){
+            out.print(materias[i]+"   ");
+        }
+        out.println();
         for (int indice = 0; indice < manEstud.getQtosDados(); indice++)
         {
             double mediaDesseEstudante = manEstud.valorDe(indice).mediaDasNotas();
