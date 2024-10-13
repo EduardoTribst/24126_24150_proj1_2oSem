@@ -96,7 +96,7 @@ public class ManterEstudantes implements ManterDados {
     public void excluir(int posicaoDeExclusao)  {
         qtosDados --;
         for(int i = posicaoDeExclusao; i<qtosDados; i++){
-            dados[i] = dados[i+1]; //DEVE ESTOURAR O LIMITE DE ESTUDANTES
+            dados[i] = dados[i+1];
         }
     }
 
@@ -180,6 +180,10 @@ public class ManterEstudantes implements ManterDados {
 
     public int getQtosDados(){
         return qtosDados;
+    }
+
+    public int getOnde() {
+        return onde;
     }
 
     public void setQtosDados(int numeroDeDados) throws Exception {

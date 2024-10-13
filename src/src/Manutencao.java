@@ -4,15 +4,11 @@ import java.util.Scanner;
 import static java.lang.System.*;
 
 public class Manutencao {
-    enum Ordens {porRa, porNome, porCurso, porMedia};
+    enum Ordens {porRa, porNome, porCurso, porMedia}
     private static Ordens ordemAtual = Ordens.porRa;
-    //private static Estudante[] estud;       // vetor de estudantes
-    //private static int quantosEstudantes;   // tamanho lógico do vetor estud
-    //private static BufferedReader arquivoDeEntrada;
-    //private static BufferedWriter arquivoDeSaida;
     static Scanner leitor = new Scanner(in);
     static boolean continuarPrograma = true;
-    static int onde; // índice resultante da pesquisa binária
+
     //-------------------------------------------------------
     static ManterEstudantes manEstud = new ManterEstudantes();
     static String[] materias;
@@ -35,7 +31,7 @@ public class Manutencao {
 
 
     public static void seletorDeOpcoes() throws Exception {
-        int opcao = 0;
+        int opcao;
         do {
             out.println("Opções:\n");
             out.println("0 - Terminar programa");
@@ -116,7 +112,7 @@ public class Manutencao {
             JOptionPane.showMessageDialog(null,"Estudante não encontrado!");
         else  // achou o estudante procurado, no índice "onde" do vetor
         {
-            manEstud.excluir(onde);  // última posição usada
+            manEstud.excluir(manEstud.getOnde());  // última posição usada
         }
     }
 
@@ -124,6 +120,11 @@ public class Manutencao {
     public static void listarEstudantes() throws Exception{
         out.println("\n\nListagem de Estudantes\n");
         int contLinha = 0;  // contador de linhas
+        out.print("                                           "); //Espacamento até as notas
+        for (int i = 0; i<materias.length; i++){
+            out.print(materias[i]+"   ");
+        }
+        out.println();
         for (int ind = 0; ind < manEstud.getQtosDados(); ind++)
         {
             out.println(manEstud.valorDe(ind));
@@ -140,8 +141,8 @@ public class Manutencao {
 
     public static void listarSituacoes() throws Exception {
         out.println("\n\nSituação estudantil\n");
-        String situacao = "";
-        out.print("                                                                 ");
+        String situacao;
+        out.print("                                                                 "); //Espacamento até as notas
         for (int i = 0; i<materias.length; i++){
             out.print(materias[i]+"   ");
         }
@@ -202,7 +203,7 @@ public class Manutencao {
                 int quant = leitor.nextInt(); // depois de ler int, ler nextline()
                 leitor.nextLine(); // necessário após nextInt() para poder ler strings a seguir
 
-                manEstud.valorDe(onde).setQuantasNotas(quant);
+                manEstud.valorDe(manEstud.getOnde()).setQuantasNotas(quant);
                 double nota;
                 for (int indNota = 0; indNota < quant; indNota++) {
                     do {
@@ -212,7 +213,7 @@ public class Manutencao {
                             break;  // sai do do-while
                         out.println("Nota inválida. Digite novamente:");
                     } while (true);
-                    manEstud.valorDe(onde).setNota(nota, indNota);
+                    manEstud.valorDe(manEstud.getOnde()).setNota(nota, indNota);
                 }
             }
         }
