@@ -283,13 +283,13 @@ public class Manutencao {
         }
         out.println(); // quebra a linha
         for (int i=0; i<qtsMaterias; i++){
-            out.print(mediasPorDisciplina[i] + "   ");
+            out.printf("%.2f   ",mediasPorDisciplina[i]);
         }
         out.println(); // quebra a linha
-        out.println("Na matéria com a menor média, a melhor nota foi do "+ 
-        manEstud.dados[getIndiceEstudanteMenorNotaPorDisciplina(indDisciplinaMenorMedia)]);
-        out.println("Na matéria com a maior média, a pior nota foi do "+ 
-        manEstud.dados[getIndiceEstudanteMenorNotaPorDisciplina(indDisciplinaMaiorMedia)]);
+        out.println("Na matéria com a menor média, a melhor nota foi de "+
+        manEstud.dados[getIndiceEstudanteMaiorNotaPorDisciplina(indDisciplinaMenorMedia)].getNome());
+        out.println("Na matéria com a maior média, a pior nota foi de "+
+        manEstud.dados[getIndiceEstudanteMenorNotaPorDisciplina(indDisciplinaMaiorMedia)].getNome()) ;
     }
 
     private static int getIndiceEstudanteMaiorNotaPorDisciplina(int indiceDaDisciplina){
@@ -316,44 +316,4 @@ public class Manutencao {
         return indEstudMenorNota;
     }
 
-//    private static void maisEstudantesAprovados() throws Exception{
-//        int qual = 0;
-//        int[] maiorIndice = new int[manEstud.getQtosDados()];
-//        double quantosAprovadosMax = -1;
-//        int quantasMaioresNotas = 0;
-//
-//        int[] aprovados = new int[manEstud.getQtosDados()];
-//        for (int i = 0; i<manEstud.getQtosDados(); i++){
-//            for (int ind = 0; ind < manEstud.valorDe(i).getQuantasNotas(); ind ++){
-//                if (manEstud.valorDe(i).getNotas()[ind] >= 5)
-//                    aprovados[ind] ++;
-//            }
-//        }
-//
-//        for (int indice = 0; indice<aprovados.length; indice++){
-//            if (aprovados[indice] > quantosAprovadosMax){
-//                quantasMaioresNotas = 0; //Não tem nenhuma nota lida maior que aprovados[indice]
-//                quantosAprovadosMax = aprovados[indice];
-//                maiorIndice[quantasMaioresNotas++] = indice;
-//            }
-//            else if (aprovados[indice] == quantosAprovadosMax){
-//                maiorIndice[quantasMaioresNotas++] = indice;
-//
-//            }
-//        }
-//        //Ver qual o indice do maior valor do vetor aprovados
-//        //Não sei e essa lógica funciona mes não posso acabar agora
-//        if (maiorIndice.length == 1){
-//            out.println("Disciplina com mais estudantes aprovados: "+materias[maiorIndice[0]]);
-//        }
-//        else{
-//            out.print("Disciplinas com mais estudantes aprovados ("+quantosAprovadosMax+"): ");
-//            for (int index = 0; index<maiorIndice.length; index++){
-//                out.print(materias[maiorIndice[index]]);
-//            }
-//            out.println();
-//        }
-//
-//
-//    }
 }
