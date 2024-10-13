@@ -7,6 +7,7 @@ public class ManterEstudantes implements ManterDados {
     Estudante[] dados;
     Situacao situacao;
     int onde;
+    int quantosDados;
 
     public void inicializaVetor(int tamanho){
         tamanhoFisico = tamanho;
@@ -24,7 +25,8 @@ public class ManterEstudantes implements ManterDados {
                     Estudante novoDado = new Estudante();
                     try {
                         if (novoDado.leuLinhaDoArquivo(arquivoDeEntrada) ) { // erro no leuLinhaDoArquivo
-                            incluirNoFinal(novoDado);
+                            dados[qtosDados] = novoDado;
+                            qtosDados++;
                         }
                         else
                             parar = true;
@@ -178,6 +180,13 @@ public class ManterEstudantes implements ManterDados {
 
     public int getQtosDados(){
         return qtosDados;
+    }
+
+    public void setQtosDados(int numeroDeDados) throws Exception {
+        if (numeroDeDados < 0){
+            throw new Exception("O numero de dados deve ser positivo");
+        }
+        qtosDados = numeroDeDados;
     }
 
     public void expandirVetor() {

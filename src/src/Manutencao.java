@@ -7,7 +7,7 @@ public class Manutencao {
     enum Ordens {porRa, porNome, porCurso, porMedia};
     private static Ordens ordemAtual = Ordens.porRa;
     //private static Estudante[] estud;       // vetor de estudantes
-    private static int quantosEstudantes;   // tamanho lógico do vetor estud
+    //private static int quantosEstudantes;   // tamanho lógico do vetor estud
     //private static BufferedReader arquivoDeEntrada;
     //private static BufferedWriter arquivoDeSaida;
     static Scanner leitor = new Scanner(in);
@@ -23,9 +23,9 @@ public class Manutencao {
         for (int ind=0; ind < 3; ind++)
             //out.println("Entrou no for de preencher");
             manEstud.incluirNoFinal(new Estudante());// criar objetos Estudante vazios no vetor
-        quantosEstudantes = 0; // tamanho lógico (vetor vazio)
-        manEstud.leituraDosDados("../DadosEstudantes.txt"); //TALVEZ DEPOIS VER O ARQUIVO COM O SCANNER
-        leituraDadosMaterias("../DadosMateriasTeste.txt");
+        manEstud.setQtosDados(0); // tamanho lógico (vetor vazio)
+        manEstud.leituraDosDados("DadosEstudantes.txt"); //TALVEZ DEPOIS VER O ARQUIVO COM O SCANNER
+        leituraDadosMaterias("DadosMateriasTeste.txt");
         if (continuarPrograma) {
             seletorDeOpcoes();
             //manEstud.gravarDados("../DadosEstudantes.txt");//TALVEZ DEPOIS VER O ARQUIVO COM O SCANNER
@@ -48,6 +48,7 @@ public class Manutencao {
             out.println("7 - Ordenar por nome");
             out.println("8 - Ordenar por média");
             out.println("9 - Mostrar estatísticas");
+
             out.print("\nSua opção: ");
             opcao = leitor.nextInt();
             leitor.nextLine();      // necessário após nextInt() para poder ler strings a seguir
@@ -68,6 +69,7 @@ public class Manutencao {
 
     public static void leituraDadosMaterias(String caminhoArq){
         qtsMaterias = manEstud.dados[0].getQuantasNotas();
+        out.println(qtsMaterias);
         materias = new String[qtsMaterias]; // A quantidade de matérias é a mesma da de notas
         try {
             BufferedReader arq = new BufferedReader(new FileReader(caminhoArq));
@@ -122,7 +124,7 @@ public class Manutencao {
     public static void listarEstudantes() throws Exception{
         out.println("\n\nListagem de Estudantes\n");
         int contLinha = 0;  // contador de linhas
-        for (int ind = 0; ind < quantosEstudantes; ind++)
+        for (int ind = 0; ind < manEstud.getQtosDados(); ind++)
         {
             out.println(manEstud.valorDe(ind));
 
@@ -139,7 +141,7 @@ public class Manutencao {
     public static void listarSituacoes() throws Exception {
         out.println("\n\nSituação estudantil\n");
         String situacao = "";
-        for (int indice = 0; indice < quantosEstudantes; indice++)
+        for (int indice = 0; indice < manEstud.getQtosDados(); indice++)
         {
             double mediaDesseEstudante = manEstud.valorDe(indice).mediaDasNotas();
             if (mediaDesseEstudante < 5)
@@ -157,8 +159,8 @@ public class Manutencao {
 
 
     private static void ordenarPorCurso() throws Exception {
-        for (int lento=0; lento < quantosEstudantes; lento++)
-            for (int rapido=lento+1; rapido < quantosEstudantes; rapido++)
+        for (int lento=0; lento < manEstud.getQtosDados(); lento++)
+            for (int rapido=lento+1; rapido < manEstud.getQtosDados(); rapido++)
                 if (manEstud.valorDe(lento).getCurso().compareTo(manEstud.valorDe(rapido).getCurso()) > 0)
                     manEstud.trocar(lento, rapido);
         ordemAtual = Ordens.porCurso;
@@ -166,17 +168,17 @@ public class Manutencao {
 
 
     private static void ordenarPorNome() throws Exception{
-        for (int lento=0; lento < quantosEstudantes; lento++)
-            for (int rapido=lento+1; rapido < quantosEstudantes; rapido++)
+        for (int lento=0; lento < manEstud.getQtosDados(); lento++)
+            for (int rapido=lento+1; rapido < manEstud.getQtosDados(); rapido++)
                 if (manEstud.valorDe(lento).getNome().compareTo(manEstud.valorDe(rapido).getNome()) > 0)
                     manEstud.trocar(lento, rapido);
         ordemAtual = Ordens.porNome;
     }
 
     private static void ordenarPorMedia() throws Exception{
-        for (int lento=0; lento < quantosEstudantes; lento++) {
+        for (int lento=0; lento < manEstud.getQtosDados(); lento++) {
             double mediaAtual = manEstud.valorDe(lento).mediaDasNotas();
-            for (int rapido=lento+1; rapido < quantosEstudantes; rapido++)
+            for (int rapido=lento+1; rapido < manEstud.getQtosDados(); rapido++)
                 if (mediaAtual > manEstud.valorDe(rapido).mediaDasNotas())
                     manEstud.trocar(lento, rapido);
             ordemAtual = Ordens.porMedia;
@@ -279,11 +281,11 @@ public class Manutencao {
         for (int i=0; i<qtsMaterias; i++){
             out.print(materias[i] + " ");
         }
-        out.println(""); // quebra a linha
+        out.println(); // quebra a linha
         for (int i=0; i<qtsMaterias; i++){
             out.print(mediasPorDisciplina[i] + "   ");
         }
-        out.println(""); // quebra a linha
+        out.println(); // quebra a linha
         out.println("Na matéria com a menor média, a melhor nota foi do "+ 
         manEstud.dados[getIndiceEstudanteMenorNotaPorDisciplina(indDisciplinaMenorMedia)]);
         out.println("Na matéria com a maior média, a pior nota foi do "+ 
@@ -303,7 +305,7 @@ public class Manutencao {
     }
 
     private static int getIndiceEstudanteMenorNotaPorDisciplina(int indiceDaDisciplina){
-        double menorNota = -1;
+        double menorNota = 11; //Maior do qua a maior nota possível para ser substituida por qualquer
         int indEstudMenorNota = -1;
         for (int i=0; i<manEstud.qtosDados; i++){
             if (manEstud.dados[i].getNotas()[indiceDaDisciplina] < menorNota){
@@ -314,17 +316,44 @@ public class Manutencao {
         return indEstudMenorNota;
     }
 
-    private static void maisEstudantesAprovados() throws Exception{
-        int qual = 0;
-        int[] aprovados = new int[manEstud.getQtosDados()];
-        for (int i = 0; i<manEstud.getQtosDados(); i++){
-            for (int ind = 0; ind < manEstud.valorDe(i).getQuantasNotas(); ind ++){
-                if (manEstud.valorDe(i).getNotas()[ind] >= 5)
-                    aprovados[ind] ++;
-            }
-        }
-        //Ver qual o indice do maior valor do vetor aprovados
-        //Não sei e essa lógica funciona mes não posso acabar agora
-        out.println("Disciplina com mais estudantes aprovados: ");
-    }
+//    private static void maisEstudantesAprovados() throws Exception{
+//        int qual = 0;
+//        int[] maiorIndice = new int[manEstud.getQtosDados()];
+//        double quantosAprovadosMax = -1;
+//        int quantasMaioresNotas = 0;
+//
+//        int[] aprovados = new int[manEstud.getQtosDados()];
+//        for (int i = 0; i<manEstud.getQtosDados(); i++){
+//            for (int ind = 0; ind < manEstud.valorDe(i).getQuantasNotas(); ind ++){
+//                if (manEstud.valorDe(i).getNotas()[ind] >= 5)
+//                    aprovados[ind] ++;
+//            }
+//        }
+//
+//        for (int indice = 0; indice<aprovados.length; indice++){
+//            if (aprovados[indice] > quantosAprovadosMax){
+//                quantasMaioresNotas = 0; //Não tem nenhuma nota lida maior que aprovados[indice]
+//                quantosAprovadosMax = aprovados[indice];
+//                maiorIndice[quantasMaioresNotas++] = indice;
+//            }
+//            else if (aprovados[indice] == quantosAprovadosMax){
+//                maiorIndice[quantasMaioresNotas++] = indice;
+//
+//            }
+//        }
+//        //Ver qual o indice do maior valor do vetor aprovados
+//        //Não sei e essa lógica funciona mes não posso acabar agora
+//        if (maiorIndice.length == 1){
+//            out.println("Disciplina com mais estudantes aprovados: "+materias[maiorIndice[0]]);
+//        }
+//        else{
+//            out.print("Disciplinas com mais estudantes aprovados ("+quantosAprovadosMax+"): ");
+//            for (int index = 0; index<maiorIndice.length; index++){
+//                out.print(materias[maiorIndice[index]]);
+//            }
+//            out.println();
+//        }
+//
+//
+//    }
 }
