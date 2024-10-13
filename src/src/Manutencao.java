@@ -272,12 +272,12 @@ public class Manutencao {
             }
         }
         // Output com as estatísticas:
-        out.println("A disciplina com maior aprovação foi "+ materias[indDisciplinaMaiorAprovacao]);
-        out.println("A disciplina com maior retenção foi "+ materias[indDisciplinaMenorAprovacao]);
-        out.println("O estudante com a meior média foi " + manEstud.dados[indEstudanteMaiorMedia].getNome());
-        out.println("A matéria de sua maior nota foi "+ materias[manEstud.dados[indEstudanteMaiorMedia].getIndiceMaiorNota()]);
-        out.println("A matéria de sua menor nota foi "+ materias[manEstud.dados[indEstudanteMaiorMedia].getIndiceMenorNota()]);
-        out.println("Médias por disciplina");
+        out.println("\nA disciplina com maior aprovação foi "+ materias[indDisciplinaMaiorAprovacao]);
+        out.println("\nA disciplina com maior retenção foi "+ materias[indDisciplinaMenorAprovacao]);
+        out.println("\nO estudante com a meior média foi " + manEstud.dados[indEstudanteMaiorMedia].getNome());
+        out.println("\nA matéria de sua maior nota foi "+ materias[manEstud.dados[indEstudanteMaiorMedia].getIndiceMaiorNota()]);
+        out.println("\nA matéria de sua menor nota foi "+ materias[manEstud.dados[indEstudanteMaiorMedia].getIndiceMenorNota()]);
+        out.println("\nMédias por disciplina");
         for (int i=0; i<qtsMaterias; i++){
             out.print(materias[i] + " ");
         }
@@ -286,10 +286,12 @@ public class Manutencao {
             out.printf("%.2f   ",mediasPorDisciplina[i]);
         }
         out.println(); // quebra a linha
-        out.println("Na matéria com a menor média, a melhor nota foi de "+
+        out.println("\nNa matéria com a menor média, a melhor nota foi de "+
         manEstud.dados[getIndiceEstudanteMaiorNotaPorDisciplina(indDisciplinaMenorMedia)].getNome());
-        out.println("Na matéria com a maior média, a pior nota foi de "+
+        out.println("\nNa matéria com a maior média, a pior nota foi de "+
         manEstud.dados[getIndiceEstudanteMenorNotaPorDisciplina(indDisciplinaMaiorMedia)].getNome()) ;
+        out.print("\n\nTecle [Enter] para prosseguir: ");
+        leitor.nextLine();
     }
 
     private static int getIndiceEstudanteMaiorNotaPorDisciplina(int indiceDaDisciplina){
